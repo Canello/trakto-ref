@@ -3,7 +3,7 @@ const path = require('path');
 const axios = require('axios');
 const sharp = require('sharp');
 const { v4: uuidv4 } = require('uuid');
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { catchInvalidImage } from '../utils/images.functions';
 
 @Injectable()

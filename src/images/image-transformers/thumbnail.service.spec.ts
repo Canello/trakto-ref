@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ThumbnailService } from './thumbnail.service';
 import { ImagesRepository } from '../data-storage/images.repository';
 import { compressToQuality } from '../utils/images.functions';
+import { makeMockImagesRepository } from '../utils/images.mocks';
 
 const sharp = require('sharp');
 
@@ -19,10 +20,7 @@ describe('ThumbnailService', () => {
   let fakeImagesRepository: any;
 
   beforeEach(async () => {
-    fakeImagesRepository = {
-      save: () => {},
-      getMetadata: () => {},
-    };
+    fakeImagesRepository = makeMockImagesRepository();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [

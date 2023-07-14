@@ -16,13 +16,8 @@ jest.mock('sharp', () => {
 
 describe('BlurService', () => {
   let blurService: BlurService;
-  let fakeImagesRepository: any;
 
   beforeEach(async () => {
-    fakeImagesRepository = {
-      save: () => {},
-    };
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [BlurService, ImagesRepository],
     }).compile();
