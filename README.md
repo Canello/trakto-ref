@@ -48,7 +48,7 @@ A maioria das pastas tem nomes autoexplicativos, mas algumas vale a pena detalha
 - `/images` contém o módulo ImagesModule e tudo que é referente a ele.
 - `/data-storage` contém tudo relacionado ao armazenamento de dados, como entidades e repositórios.
 - `/images-transformers` contém serviços para manipulação de imagens - como ThumbnailService para gerar thumbnails e BlurService para aplicar filtro de blur.
-- `images.controller` é responsável pelas rotas relativa a imagem.
+- `images.controller` é responsável pelas rotas relativas às imagens.
 - A lógica de cada rota está em `images.service`, portanto seus metódos mapeiam 1 para 1 com os métodos de `images.controller`.
 
 ## 3. Endpoints
