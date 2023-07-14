@@ -49,7 +49,7 @@ A maioria das pastas tem nomes autoexplicativos, mas algumas vale a pena detalha
 - `/data-storage` contém tudo relacionado ao armazenamento de dados, como entidades e repositórios.
 - `/images-transformers` contém serviços para manipulação de imagens - como ThumbnailService para gerar thumbnails e BlurService para aplicar filtro de blur.
 - `images.controller` é responsável pelas rotas relativa a imagem.
-- A lógica de cada rota está em `images.service`, sendo que seus metódos mapeiam 1 para 1 com os métodos do controller.
+- A lógica de cada rota está em `images.service`, portanto seus metódos mapeiam 1 para 1 com os métodos do controller.
 
 ## 3. Endpoints
 
