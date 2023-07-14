@@ -45,9 +45,9 @@ O projeto está organizado da seguinte forma:
 
 A maioria das pastas tem nomes autoexplicativos, mas algumas vale a pena detalhar.
 
-- `images` contém o módulo ImagesModule e tudo que é referente a ele.
-- `data-storage` contém tudo relacionado ao armazenamento de dados, como entidades e repositórios.
-- `images-transformers` contém serviços para manipulação de imagens - como ThumbnailService para gerar thumbnails e BlurService para aplicar filtro de blur.
+- `/images` contém o módulo ImagesModule e tudo que é referente a ele.
+- `/data-storage` contém tudo relacionado ao armazenamento de dados, como entidades e repositórios.
+- `/images-transformers` contém serviços para manipulação de imagens - como ThumbnailService para gerar thumbnails e BlurService para aplicar filtro de blur.
 - `images.controller` é responsável pelas rotas relativa a imagem.
 - A lógica de cada rota está em `images.service`, sendo que seus metódos mapeiam 1 para 1 com os métodos do controller.
 
