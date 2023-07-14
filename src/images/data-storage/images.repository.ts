@@ -8,28 +8,6 @@ import { catchInvalidImage } from '../utils/images.functions';
 
 @Injectable()
 export class ImagesRepository {
-  public async getMetadata(filename: string) {
-    const path = this.getPath(filename);
-
-    let metadata: any;
-    try {
-      metadata = await sharp(path).metadata();
-    } catch (err) {
-      throw new BadRequestException('Imagem inválida.');
-    }
-
-    return metadata;
-  }
-
-  // Save image buffer as image file into file system
-  public async save(filename: string, imageBuffer: Buffer) {
-    const newPath = this.getPath(filename);
-
-    await catchInvalidImage(async () => {
-      await sharp(imageBuffer).toFile(newPath);
-    });
-  }
-
   // Download image from url into file system
   public async downloadFrom(url: string) {
     const filename = uuidv4() + '.jpeg';
@@ -41,6 +19,27 @@ export class ImagesRepository {
     });
 
     return filename;
+  }
+
+  // Save image buffer as image file into file system
+  public async save(filename: string, imageBuffer: Buffer) {
+    const newPath = this.getPath(filename);
+
+    await catchInvalidImage(async () => {
+      await sharp(imageBuffer).toFile(newPath);
+    });
+  }
+
+  // Get metadata from image saved in the file system
+  public async getMetadata(filename: string) {
+    const path = this.getPath(filename);
+
+    let metadata: any;
+    await catchInvalidImage(async () => {
+      metadata = await sharp(path).metadata();
+    });
+
+    return metadata;
   }
 
   // Create path to filename in the public/images folder

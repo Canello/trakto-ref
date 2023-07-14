@@ -28,10 +28,11 @@ export class ImagesService {
     const savedMetadata = await this.metadataRepository.save(newMetadata);
 
     // Create thumbnail and save it on public/images folder
-    const thumbnailFilename = await this.thumbnailService.generateThumbnail(
-      filename,
-      { compress },
-    );
+    const thumbnailBuffer = await this.thumbnailService.generate(filename, {
+      compress,
+    });
+    const thumbnailFilename = this.thumbnailService.getFilename(filename);
+    await this.imagesRepository.save(thumbnailFilename, thumbnailBuffer);
 
     // Send reponse
     return {
@@ -48,10 +49,12 @@ export class ImagesService {
     const filename = await this.imagesRepository.downloadFrom(image);
 
     // Create blurred image and save it on public/images folder
-    const blurredImageFilename = await this.blurService.generateBlurredImage(
-      filename,
-      { compress, blur },
-    );
+    const blurredImageBuffer = await this.blurService.generate(filename, {
+      compress,
+      blur,
+    });
+    const blurredImageFilename = this.blurService.getFilename(filename);
+    await this.imagesRepository.save(blurredImageFilename, blurredImageBuffer);
 
     // Send reponse
     return {

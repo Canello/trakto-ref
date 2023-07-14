@@ -14,33 +14,38 @@ export class ThumbnailService {
 
   constructor(private imagesRepository: ImagesRepository) {}
 
-  // Generate compressed and resized thumbnail image and save it in the file system
-  // Only resizes if the bigger side of the original image is greater than MAX_SIZE
-  public async generateThumbnail(
+  // Generate compressed and resized image and returns a buffer
+  // Only resizes if the larger side of the original image is greater than MAX_SIZE
+  public async generate(
     filename: string,
     { compress = 0 }: GenerateThumbnailOptions,
   ) {
     const { width, height } = await this.imagesRepository.getMetadata(filename);
-    const biggerSide = Math.max(width, height);
-    const thumbnailFilename = this.getThumbnailFilename(filename);
+    const largerSide = Math.max(width, height);
 
-    if (biggerSide > this.MAX_SIZE) {
-      await this.compressAndSaveResizedImage(filename, thumbnailFilename, {
+    let imageBuffer: Buffer;
+    if (largerSide > this.MAX_SIZE) {
+      imageBuffer = await this.compressAndResizeImage(filename, {
         compress,
       });
     } else {
-      await this.compressAndSaveOriginalImageCopy(filename, thumbnailFilename, {
+      imageBuffer = await this.compressImage(filename, {
         compress,
       });
     }
 
-    return thumbnailFilename;
+    return imageBuffer;
+  }
+
+  // Create thumbnail filename
+  public getFilename(filename: string) {
+    const [filenameWithoutExtension, extension] = filename.split('.');
+    return filenameWithoutExtension + '_thumb.' + extension;
   }
 
   // Compress and save resized image
-  private async compressAndSaveResizedImage(
+  private async compressAndResizeImage(
     filename: string,
-    newFilename: string,
     { compress = 0 }: GenerateThumbnailOptions,
   ) {
     const { width, height } = await this.imagesRepository.getMetadata(filename);
@@ -61,13 +66,13 @@ export class ThumbnailService {
         .jpeg({ quality })
         .toBuffer();
     });
-    await this.imagesRepository.save(newFilename, imageBuffer);
+
+    return imageBuffer;
   }
 
   // Compress and save copy of original image
-  private async compressAndSaveOriginalImageCopy(
+  private async compressImage(
     filename: string,
-    newFilename: string,
     { compress = 0 }: GenerateThumbnailOptions,
   ) {
     const path = this.getPath(filename);
@@ -77,13 +82,8 @@ export class ThumbnailService {
     await catchInvalidImage(async () => {
       imageBuffer = await sharp(path).jpeg({ quality }).toBuffer();
     });
-    await this.imagesRepository.save(newFilename, imageBuffer);
-  }
 
-  // Create thumbnail filename
-  private getThumbnailFilename(filename: string) {
-    const [filenameWithoutExtension, extension] = filename.split('.');
-    return filenameWithoutExtension + '_thumb.' + extension;
+    return imageBuffer;
   }
 
   // Create path to filename in the public images folder

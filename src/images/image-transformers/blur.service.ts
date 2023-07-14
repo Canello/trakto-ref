@@ -1,7 +1,6 @@
 const path = require('path');
 const sharp = require('sharp');
 import { Injectable } from '@nestjs/common';
-import { ImagesRepository } from '../data-storage/images.repository';
 import { GenerateBlurredImageOptions } from '../utils/images.types';
 import {
   catchInvalidImage,
@@ -10,30 +9,24 @@ import {
 
 @Injectable()
 export class BlurService {
-  constructor(private imagesRepository: ImagesRepository) {}
-
-  public async generateBlurredImage(
+  // Generate compressed and blurred image and returns a buffer
+  public async generate(
     filename: string,
     { compress = 0, blur = 0 }: GenerateBlurredImageOptions,
   ) {
-    const blurredImageFilename = this.getBlurredImageFilename(filename);
-    const originalPath = this.getPath(filename);
+    const path = this.getPath(filename);
     const quality = compressToQuality(compress);
 
     let imageBuffer: Buffer;
     await catchInvalidImage(async () => {
-      imageBuffer = await sharp(originalPath)
-        .blur(blur)
-        .jpeg({ quality })
-        .toBuffer();
+      imageBuffer = await sharp(path).blur(blur).jpeg({ quality }).toBuffer();
     });
-    await this.imagesRepository.save(blurredImageFilename, imageBuffer);
 
-    return blurredImageFilename;
+    return imageBuffer;
   }
 
   // Create blurred image filename
-  private getBlurredImageFilename(filename: string) {
+  public getFilename(filename: string) {
     const [filenameWithoutExtension, extension] = filename.split('.');
     return filenameWithoutExtension + '_blurred.' + extension;
   }

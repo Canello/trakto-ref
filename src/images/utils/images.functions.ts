@@ -10,7 +10,7 @@ export const catchInvalidImage = async (func: Function) => {
   try {
     await func();
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     throw new BadRequestException('Imagem inválida.');
   }
 };
